@@ -1,0 +1,15 @@
+{% with page=request.GET.page %}
+<div class="row justify-content-center">
+    <nav>
+        <ul class="pagination flex-wrap">
+          <li class="page-item {% if page|add:0 <= 1 %}disabled{% endif %}"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page|add:'-1' }}">Previous</a></li>
+
+          {% for num in max_page %}
+          <li class="page-item {% if num == page|add:0 %}active{% endif %}"><a class="page-link" href="?title={{ request.GET.title }}&page={{ num }}">{{ num }}</a></li>
+          {% endfor %}
+
+          <li class="page-item {% if page|add:0 >= max_page|last %}disabled{% endif %}"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page|add:'1' }}">Next</a></li>
+        </ul>
+      </nav>
+</div>
+{% endwith %}

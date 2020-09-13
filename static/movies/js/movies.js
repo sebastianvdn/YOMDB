@@ -11,3 +11,7 @@ $grid.imagesLoaded().progress( function() {
     $grid.masonry('layout');
 });
 
+const _url = location.href
+if (!_url.includes('page')) {
+    location.href += '&page=1'
+}

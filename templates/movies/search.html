@@ -22,11 +22,14 @@
         {% endfor %}
 
     </div>
+    {% include 'partials/_pagination.html' %}
 
     {% else %}
     <p>No movies for <strong>{{ request.GET.title }}.</strong></p>
     {% endif %}
+
 </div>
+
 {% endblock content %}
 
 {% block scripts %}
