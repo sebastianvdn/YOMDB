@@ -1,14 +1,34 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
+{% endblock style %}
 
 {% block content %}
-<form method="get">
-    <div class="container my-3">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" required placeholder="Movie title" aria-label="Movie title" aria-describedby="button-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+<div class="container my-3">
+    <form class="mb-3" method="get">
+        {{ form|crispy }}
+    <input type="submit" value="Search" class="btn btn-primary btn-block">
+    </form>
+    {% if movies %}
+    <div id="grid">
+        {% for movie in movies %}
+            <div class="grid-sizer"></div>
+            <!-- Card -->
+            <div class="grid-item">
+                {% include 'partials/_card.html' %}
             </div>
-          </div>
+        {% endfor %}
+
     </div>
-</form>
+
+    {% else %}
+    <p>No movies for <strong>{{ request.GET.title }}.</strong></p>
+    {% endif %}
+</div>
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'movies/js/movies.js' %}"></script>
+{% endblock scripts %}

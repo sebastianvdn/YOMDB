@@ -1,0 +1,31 @@
+{% load get_item %}
+
+<div class="card mx-1 mb-2">
+
+    <!-- Card content -->
+    <div class="card-body"> 
+        <form action="" class="d-inline float-right ml-2" method="post">{% csrf_token %}
+            <a type="submit">
+                <span id="likes-count-{{ recipe.pk }}">{{ recipe.likes.count }}</span> <i name="{{ recipe.slug }}" class="fa-heart" data-token="{{ csrf_token }}" data-url=""></i>
+            </a>
+        </form>                    
+        <!-- Title -->
+        <a href="">
+            <p class="card-title font-weight-bold mb-0">{{ movie|get_item:'Title' }}</p>   
+        </a>
+                            
+    </div>
+
+    <!-- Card image -->
+    <a href="">
+        <img class="card-img-top rounded-0 img-fluid" src="{{ movie|get_item:'Poster' }}" alt="No image available">
+    </a>
+
+
+    <!-- Card content -->
+    <small class="card-body">
+        <div class="Stars" style="--rating: {{ recipe.get_average_rating|safe }}"><span class="d-none d-sm-inline" ><small class="text-muted">{{ recipe.ratings.get.count }}</small></span></div>
+    </small>
+
+</div>
+<!-- Card -->
