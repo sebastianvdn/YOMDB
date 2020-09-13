@@ -9,3 +9,4 @@ class SearchMoviesForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields['title'].label = ''
+
