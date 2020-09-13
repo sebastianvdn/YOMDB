@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="get">
+    <div class="container my-3">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" required placeholder="Movie title" aria-label="Movie title" aria-describedby="button-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+          </div>
+    </div>
+</form>
+{% endblock content %}
