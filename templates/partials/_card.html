@@ -5,8 +5,8 @@
     <!-- Card content -->
     <div class="card-body"> 
         <form action="" class="d-inline float-right ml-2" method="post">{% csrf_token %}
-            <a type="submit">
-                <span id="likes-count-{{ recipe.pk }}">{{ recipe.likes.count }}</span> <i name="{{ recipe.slug }}" class="fa-heart" data-token="{{ csrf_token }}" data-url=""></i>
+            <a class="add-to-watchlist" movieId="{{ movie|get_item:'imdbID' }}" type="submit">
+                <span>{{ recipe.likes.count }}</span> <i class="fas fa-file-video"></i>
             </a>
         </form>                    
         <!-- Title -->

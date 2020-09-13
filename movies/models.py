@@ -9,6 +9,8 @@ class WatchList(models.Model):
     movie_genre = models.CharField(max_length=255)
     movie_actors = models.CharField(max_length=1000)
     user = models.ForeignKey(User, related_name='watchlist', on_delete=models.CASCADE)
+    watched = models.BooleanField(default=False)
+    added = models.DateField(auto_now_add=True,)
 
     def __str__(self):
         return f'{self.user} wants to watch {self.movie_title}'
