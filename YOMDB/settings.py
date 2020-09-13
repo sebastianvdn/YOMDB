@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,3 +130,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # OMDB API KEY
 OMDB_API_KEY = 'fefe507c'
+
+# Message settings
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

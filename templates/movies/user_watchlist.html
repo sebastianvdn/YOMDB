@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% include 'partials/_alerts.html' %}
+<div class="container my-3">
+
+    {% if object_list %}
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Movie Title</th>
+            <th scope="col">Added</th>
+            <th scope="col">Watched</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movie in object_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ movie.movie_title }}</td>
+                <td>{{ movie.added }}</td>
+                <form method="POST" action="{% url 'movies:update_watchlist_item' movie.movie_id %}">{% csrf_token %}
+                    <td>
+                        <div class="input-group">
+                            <select class="custom-select" name="watched">
+                              <option {% if movie.watched %}selected{% endif %} value="True">True</option>
+                              <option {% if not movie.watched %}selected{% endif %} value="False">False</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <input class="btn btn-success" type="submit" value="Update">
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+    {% else %}
+    <p>No movies for <strong>{{ request.GET.title }}.</strong></p>
+    {% endif %}
+
+</div>
+
+{% endblock content %}

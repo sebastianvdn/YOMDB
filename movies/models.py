@@ -14,3 +14,7 @@ class WatchList(models.Model):
 
     def __str__(self):
         return f'{self.user} wants to watch {self.movie_title}'
+
+    class Meta:
+        ordering = ['-added']
+        unique_together = ['movie_id', 'user']

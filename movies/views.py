@@ -1,11 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.generic import ListView, UpdateView
+from django.views.decorators.http import require_http_methods
+from django.contrib import messages
 
 import requests
 
 from .forms import SearchMoviesForm
 from .models import WatchList
+
 
 def search_movies(request):
     form = SearchMoviesForm(request.GET or None)
@@ -24,6 +28,7 @@ def search_movies(request):
             context['max_page'] = range(1, round(int(movies.json().get('totalResults', 0)) / 10 + 1))
 
     return render(request, 'movies/search.html', context)
+
 
 def toggle_movie_to_watchlist(request, movie_id):
     user = request.user
@@ -55,27 +60,25 @@ def toggle_movie_to_watchlist(request, movie_id):
             watch.save()
     return JsonResponse(resp)
 
-def like_recipe_toggle(request, slug):
-    user = request.user
-    recipe = get_object_or_404(Recipe, slug=slug)
-    liked = user in recipe.likes.all()
-    if request.method == 'POST':
-        if user.is_authenticated:
-            if liked:
-                # user has already liked this recipes
-                # remove like/user
-                recipe.likes.remove(user)
-            else:
-                # add a new like for a recipe
-                recipe.likes.add(user)
-            user_likes_count = user.recipe_likes.count()
-        else:
-            user_likes_count = 0
-            messages.info(request, 'You need to login in order to like recipes.')
 
-    return JsonResponse({
-        'liked': liked, 'liked_recipe': recipe.pk, 'liked_recipe_slug': recipe.slug,
-        'likes_count': recipe.likes.count(),
-        'logged_in': user.is_authenticated,
-        'user_likes_count': user_likes_count
-        })
+class WatchListView(ListView):
+    model = WatchList
+    template_name = 'movies/user_watchlist.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
+
+@require_http_methods(['POST'])
+def update_watchlist_item(request, movie_id):
+    if request.method == "POST":
+        watched = request.POST.get('watched')
+        if watched == 'True':
+            code = messages.success
+            message = 'Movie set to watched successfully'
+        else:
+            code = messages.error
+            message = "Movie set to not watched successfully"
+        WatchList.objects.filter(user=request.user, movie_id=movie_id).update(watched=watched)
+        code(request, message)
+    return redirect('movies:WatchListView')

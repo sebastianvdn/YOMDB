@@ -25,7 +25,11 @@
     {% include 'partials/_pagination.html' %}
 
     {% else %}
+    {% if request.GET.title %}
     <p>No movies for <strong>{{ request.GET.title }}.</strong></p>
+    {% else %}
+    <p>Search by name of movie in searchbox.</p>
+    {% endif %}
     {% endif %}
 
 </div>
