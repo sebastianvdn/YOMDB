@@ -6,35 +6,26 @@
 <div class="container my-3">
 
     {% if object_list %}
-        <form method="GET">
-            <div class="form-group">
-                <label for="exampleFormControlInput1">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        <form method="GET" action="{% url 'movies:WatchListView' %}">
+
+            <div class="form-row">
+                <div class="form-group col-md-4 mb-0">
+                    <label for="actor">Actor</label>
+                    <input type="text" class="form-control" value="{{ request.GET.actor }}" name="actor"  id="actor" placeholder="Bradd Pit">
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <label for="genre">Genre</label>
+                    <input type="text" value="{{ request.GET.genre }}" name="genre" class="form-control" id="genre" placeholder="Comedy">
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    <label for="watched">Watched?</label>
+                    <select name="watched" class="form-control" id="watched">
+                    <option {% if request.GET.watched == "True" %}selected{% endif %} value="True">Yes</option>
+                    <option {% if request.GET.watched == "False" %}selected{% endif %} value="False">No</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Example select</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="exampleFormControlSelect2">Example multiple select</label>
-                <select multiple class="form-control" id="exampleFormControlSelect2">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="exampleFormControlTextarea1">Example textarea</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
+            <input type="submit" value="Filter" class="btn btn-secondary btn-block my-3">
         </form>
         <table class="table">
         <thead>
@@ -64,7 +55,37 @@
                         <input class="btn btn-success" type="submit" value="Update">
                     </td>
                 </form>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal{{ movie.pk }}">
+                        Details
+                    </button>
+                </td>
             </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="detailModal{{ movie.pk }}" tabindex="-1" role="dialog" aria-labelledby="detailModalTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalTitle">Movie Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <h1>{{ movie.movie_title }}</h1>
+                    <p>Actors:</p>
+                    <p>{{ movie.movie_actors }}</p>
+                    <p>Genre(s):</p>
+                    <p>{{ movie.movie_genre }}</p>
+                    <img src="{{ movie.movie_poster }}" alt="">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
         {% endfor %}
         </tbody>
         </table>
@@ -74,5 +95,7 @@
     {% endif %}
 
 </div>
+
+  
 
 {% endblock content %}

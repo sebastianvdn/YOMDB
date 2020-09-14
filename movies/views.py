@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.generic import ListView, UpdateView
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
+from django.db.models import Q
 
 import requests
 
@@ -32,11 +33,9 @@ def search_movies(request):
 
 def toggle_movie_to_watchlist(request, movie_id):
     user = request.user
-    print(movie_id)
     resp = {}
     if request.method == 'POST':
         if not user.is_authenticated:
-            print('redirext')
             return JsonResponse({'error': 'Login'}, status='400')
 
         movie = requests.get(
@@ -50,10 +49,10 @@ def toggle_movie_to_watchlist(request, movie_id):
         else:
             resp['removed'] = False
             watch = WatchList()
-            print(movie)
             watch.movie_title = movie['Title']
             watch.movie_actors = movie['Actors']
             watch.movie_genre = movie['Genre']
+            watch.movie_poster = movie['Poster']
             watch.user = user
             watch.movie_id = movie_id
 
@@ -66,7 +65,17 @@ class WatchListView(ListView):
     template_name = 'movies/user_watchlist.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        watched = self.request.GET.get('watched')
+        actor = self.request.GET.get('actor')
+        genre = self.request.GET.get('genre')
+        filter_watchlist = Q()
+        if watched:
+            filter_watchlist &= Q(watched=watched)
+        if actor:
+            filter_watchlist &= Q(movie_actors__icontains=actor)
+        if genre:
+            filter_watchlist &= Q(movie_genre__icontains=genre)
+        return self.model.objects.filter(user=self.request.user).filter(filter_watchlist)
 
 
 @require_http_methods(['POST'])
