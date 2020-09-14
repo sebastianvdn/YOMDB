@@ -135,3 +135,5 @@ OMDB_API_KEY = 'fefe507c'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+LOGIN_URL = '/admin/login/'

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags static %}
 
 {% block content %}
 {% include 'partials/_alerts.html' %}
@@ -40,7 +40,13 @@
         {% for movie in object_list %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ movie.movie_title }}</td>
+                <td>{{ movie.movie_title }}
+                    <form action="" class="d-inline ml-2" method="post">{% csrf_token %}
+                        <a class="add-to-watchlist" movieId="{{ movie.movie_id }}" type="submit">
+                            <i class="fas fa-file-video"></i>
+                        </a>
+                    </form>   
+                </td>
                 <td>{{ movie.added }}</td>
                 <form method="POST" action="{% url 'movies:update_watchlist_item' movie.movie_id %}">{% csrf_token %}
                     <td>
@@ -91,7 +97,7 @@
         </table>
 
     {% else %}
-    <p>No movies for <strong>{{ request.GET.title }}.</strong></p>
+    <p>No movies added to watchlist yet. <a href="{% url 'movies:search_movies' %}">Add here.</a></p>
     {% endif %}
 
 </div>
@@ -99,3 +105,7 @@
   
 
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'movies/js/movies.js' %}"></script>
+{% endblock scripts %}

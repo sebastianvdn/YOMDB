@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.generic import ListView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.db.models import Q
@@ -60,9 +61,10 @@ def toggle_movie_to_watchlist(request, movie_id):
     return JsonResponse(resp)
 
 
-class WatchListView(ListView):
+class WatchListView(LoginRequiredMixin, ListView):
     model = WatchList
     template_name = 'movies/user_watchlist.html'
+
 
     def get_queryset(self):
         watched = self.request.GET.get('watched')
